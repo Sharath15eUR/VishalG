@@ -1,0 +1,121 @@
+NAME: VISHAL G
+
+
+1. Create a file and add executable permission to all users (user, group and others)
+
+Terminal Output:
+
+vishal@vishal-VirtualBox:~/embedur$ touch test
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 8
+drwxr-x--- 21 vishal vishal 4096 Jan 22 17:47 ..
+-rw-rw-r--  1 vishal vishal    0 Jan 22 17:47 test
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 17:47 .
+vishal@vishal-VirtualBox:~/embedur$ chmod 775 test
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 8
+drwxr-x--- 21 vishal vishal 4096 Jan 22 17:47 ..
+-rwxrwxr-x  1 vishal vishal    0 Jan 22 17:47 test
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 17:47 .
+
+
+2. create a file and remove write permission for group user alone.
+
+Terminal Output:
+
+vishal@vishal-VirtualBox:~/embedur$ touch test2
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 8
+drwxr-x--- 21 vishal vishal 4096 Jan 22 17:47 ..
+-rw-rw-r--  1 vishal vishal    0 Jan 22 17:49 test2
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 17:49 .
+vishal@vishal-VirtualBox:~/embedur$ chmod 644 test2
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 8
+drwxr-x--- 21 vishal vishal 4096 Jan 22 17:47 ..
+-rw-r--r--  1 vishal vishal    0 Jan 22 17:49 test2
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 17:49 
+
+3. Create a file and add a softlink to the file in different directory (Eg : Create a file in dir1/dir2/file and create a softlink for file inside dir1)
+
+Terminal Output:
+
+vishal@vishal-VirtualBox:~/embedur$ mkdir dir2
+vishal@vishal-VirtualBox:~/embedur$ cd dir2
+vishal@vishal-VirtualBox:~/embedur/dir2$ touch test3
+vishal@vishal-VirtualBox:~/embedur/dir2$ cd ..
+vishal@vishal-VirtualBox:~/embedur$ ln -s ./dir2/test3 link
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 12
+drwxr-x--- 21 vishal vishal 4096 Jan 22 17:47 ..
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 17:50 dir2
+lrwxrwxrwx  1 vishal vishal   12 Jan 22 17:51 link -> ./dir2/test3
+drwxrwxr-x  3 vishal vishal 4096 Jan 22 17:51 .
+
+4. Use ps command with options to display all active process running on the system
+
+Terminal Output:
+vishal@vishal-VirtualBox:~/embedur$ ps a
+    PID TTY      STAT   TIME COMMAND
+   3510 tty2     Ssl+   0:00 /usr/libexec/gdm-wayland-session env GNOME_SHELL_SESSION_MODE
+   3517 tty2     Sl+    0:00 /usr/libexec/gnome-session-binary --session=ubuntu
+   4634 pts/0    Ss     0:00 bash
+   5039 pts/1    Ss     0:00 bash
+   5046 pts/1    S+     0:00 ping 8.8.8.8
+   5048 pts/0    R+     0:00 ps a
+vishal@vishal-VirtualBox:~/embedur$ ps f
+    PID TTY      STAT   TIME COMMAND
+   5039 pts/1    Ss     0:00 bash
+   5046 pts/1    S+     0:00  \_ ping 8.8.8.8
+   4634 pts/0    Ss     0:00 bash
+   5049 pts/0    R+     0:00  \_ ps f
+   3510 tty2     Ssl+   0:00 /usr/libexec/gdm-wayland-session env GNOME_SHELL_SESSION_MODE
+   3517 tty2     Sl+    0:00  \_ /usr/libexec/gnome-session-binary --session=ubuntu
+vishal@vishal-VirtualBox:~/embedur$ ps -a
+    PID TTY          TIME CMD
+   3517 tty2     00:00:00 gnome-session-b
+   5046 pts/1    00:00:00 ping
+   5050 pts/0    00:00:00 ps
+vishal@vishal-VirtualBox:~/embedur$ ps T
+    PID TTY      STAT   TIME COMMAND
+   4634 pts/0    Ss     0:00 bash
+   5051 pts/0    R+     0:00 ps T
+vishal@vishal-VirtualBox:~/embedur$ ps r
+    PID TTY      STAT   TIME COMMAND
+   5052 pts/0    R+     0:00 ps r
+vishal@vishal-VirtualBox:~/embedur$ ps u
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+vishal      3510  0.0  0.0 244336  6016 tty2     Ssl+ 17:46   0:00 /usr/libexec/gdm-waylan
+vishal      3517  0.0  0.1 306876 16384 tty2     Sl+  17:46   0:00 /usr/libexec/gnome-sess
+vishal      4634  0.0  0.0  19932  5248 pts/0    Ss   17:46   0:00 bash
+vishal      5039  0.0  0.0  19932  5376 pts/1    Ss   17:55   0:00 bash
+vishal      5046  0.0  0.0  18940  2688 pts/1    S+   17:55   0:00 ping 8.8.8.8
+vishal      5053  300  0.0  22284  4608 pts/0    R+   17:56   0:00 ps u
+
+
+5. Create 3 files in a dir1 and re-direct the output of list command with sorted by timestamp of the files to a file
+
+Terminal output:
+
+vishal@vishal-VirtualBox:~/embedur/dir1$ ls -l
+total 0
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 17:58 test1
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:00 test2
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:02 test3
+vishal@vishal-VirtualBox:~/embedur/dir1$ ls -lt
+total 0
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:02 test3
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:00 test2
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 17:58 test1
+vishal@vishal-VirtualBox:~/embedur/dir1$ ls -ltr
+total 0
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 17:58 test1
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:00 test2
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:02 test3
+vishal@vishal-VirtualBox:~/embedur/dir1$ ls -ltr > file
+vishal@vishal-VirtualBox:~/embedur/dir1$ cat file
+total 0
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 17:58 test1
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:00 test2
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:02 test3
+-rw-rw-r-- 1 vishal vishal 0 Jan 22 18:07 file
