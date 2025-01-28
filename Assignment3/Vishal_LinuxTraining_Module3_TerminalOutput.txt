@@ -1,0 +1,46 @@
+vishal@vishal-VirtualBox:~$ cd embedur
+vishal@vishal-VirtualBox:~/embedur$ cd mod3
+vishal@vishal-VirtualBox:~/embedur/mod3$ ls
+aic-home.jpg       check.txt      test1.txt  test3.txt
+backup_manager.sh  jpeg-home.jpg  test2.txt
+vishal@vishal-VirtualBox:~/embedur/mod3$ ls -lrta
+total 112
+-rw-rw-r-- 1 vishal vishal     0 Jan 27 20:23 check.txt
+-rw-rw-r-- 1 vishal vishal 30203 Jan 28 19:08 jpeg-home.jpg
+-rw-rw-r-- 1 vishal vishal 60271 Jan 28 19:08 aic-home.jpg
+-rw-rw-r-- 1 vishal vishal     0 Jan 28 19:08 test1.txt
+-rw-rw-r-- 1 vishal vishal  3542 Jan 28 19:11 test2.txt
+-rw-rw-r-- 1 vishal vishal  2860 Jan 28 19:11 test3.txt
+-rw-rw-r-- 1 vishal vishal  1607 Jan 28 20:49 backup_manager.sh
+drwxrwxr-x 2 vishal vishal  4096 Jan 28 20:49 .
+drwxrwxr-x 4 vishal vishal  4096 Jan 28 20:50 ..
+vishal@vishal-VirtualBox:~/embedur/mod3$ chmod 777 backup_manager.sh 
+vishal@vishal-VirtualBox:~/embedur/mod3$ ./backup_manager.sh "/home/vishal/embedur/mod3" "/home/vishal/embedur/back" ".txt"
+Copied: check.txt
+Copied: test1.txt
+Copied: test2.txt
+Copied: test3.txt
+Backup completed successfully. Report saved at: /home/vishal/embedur/back/backup_report.log
+vishal@vishal-VirtualBox:~/embedur/mod3$ ls
+aic-home.jpg       check.txt      test1.txt  test3.txt
+backup_manager.sh  jpeg-home.jpg  test2.txt
+vishal@vishal-VirtualBox:~/embedur/mod3$ cd ..
+vishal@vishal-VirtualBox:~/embedur$ ls -lrta
+total 20
+drwxrwxr-x  2 vishal vishal 4096 Jan 22 18:07 dir1
+-rwxrwxr-x  1 vishal vishal    0 Jan 28 20:48 backup_manager.sh
+drwxr-x--- 21 vishal vishal 4096 Jan 28 20:49 ..
+drwxrwxr-x  2 vishal vishal 4096 Jan 28 20:49 mod3
+drwxrwxr-x  5 vishal vishal 4096 Jan 28 20:51 .
+drwxrwxr-x  2 vishal vishal 4096 Jan 28 20:51 back
+vishal@vishal-VirtualBox:~/embedur$ cd back
+vishal@vishal-VirtualBox:~/embedur/back$ ls -lrta
+total 20
+drwxrwxr-x 5 vishal vishal 4096 Jan 28 20:51 ..
+-rw-rw-r-- 1 vishal vishal    0 Jan 28 20:51 check.txt
+-rw-rw-r-- 1 vishal vishal    0 Jan 28 20:51 test1.txt
+-rw-rw-r-- 1 vishal vishal 3542 Jan 28 20:51 test2.txt
+-rw-rw-r-- 1 vishal vishal 2860 Jan 28 20:51 test3.txt
+-rw-rw-r-- 1 vishal vishal  105 Jan 28 20:51 backup_report.log
+drwxrwxr-x 2 vishal vishal 4096 Jan 28 20:51 .
+
