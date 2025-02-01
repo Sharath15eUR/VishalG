@@ -1,0 +1,37 @@
+vishal@vishal-VirtualBox:~/embedur/mod5$ ./file_analyser.sh --help
+Executable file: ./file_analyser.sh
+./exectuable file name <Directory> < keyword>
+
+to select current directory, use '.' as input
+else, choose give the directory inside quotes
+
+error logs are stored in error.log file and the output will be printed on to the terminal
+vishal@vishal-VirtualBox:~/embedur/mod5$ ./file_analyser.sh -d . -k father
+Executable file: ./file_analyser.sh
+List of searched files:
+./error.log
+./file_analyser.sh
+./help.txt
+./new.sh
+./sub/test.sh
+./sub/test.txt
+./test
+./test1.sh
+./test1.txt
+./test.sh
+vishal@vishal-VirtualBox:~/embedur/mod5$ cat error.log
+Keyword not found in .
+vishal@vishal-VirtualBox:~/embedur/mod5$ ./file_analyser.sh -d . -k vishal
+Executable file: ./file_analyser.sh
+Keyword found in: ./sub/test.txt
+List of searched files:
+./error.log
+./file_analyser.sh
+./help.txt
+./new.sh
+./sub/test.sh
+./sub/test.txt
+./test
+./test1.sh
+./test1.txt
+./test.sh

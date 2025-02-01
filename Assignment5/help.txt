@@ -1,0 +1,6 @@
+./exectuable file name <Directory> < keyword>
+
+to select current directory, use '.' as input
+else, choose give the directory inside quotes
+
+error logs are stored in error.log file and the output will be printed on to the terminal
