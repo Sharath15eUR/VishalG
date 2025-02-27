@@ -1,0 +1,333 @@
+VISHAL G
+1. Copying a folder with multiple files to destination machine folder using SCP command.
+
+vishal@vishal-VirtualBox:~$ ls
+Desktop  Documents  embedur  Pictures  snap       test1  Videos
+dev      Downloads  Music    Public    Templates  test2
+vishal@vishal-VirtualBox:~$ cd Downloads
+vishal@vishal-VirtualBox:~/Downloads$ ls
+'Campus Hires 2025 – Linux - Assessment Module 1-5.pptx'
+ ghostty_1.1.2-0.ppa1_amd64_24.04.deb
+'Vishal_Linux Training_Module1'
+ Vishal_LinuxTraining_Module2.txt
+ Vishal_LinuxTraining_Module3_ScriptFile.sh
+ Vishal_LinuxTraining_Module3_ScriptFile.txt
+ Vishal_LinuxTraining_Module3_TerminalOutput.txt
+ Vishal_LinuxTraining_Module4_Output.txt
+ Vishal_LinuxTraining_Module5_TerminalOUTPUT.txt
+vishal@vishal-VirtualBox:~/Downloads$ scp -r . vishal@Ubuntu20:/home/vishal/Downloads
+ssh: Could not resolve hostname ubuntu20: Temporary failure in name resolution
+scp: Connection closed
+vishal@vishal-VirtualBox:~/Downloads$ sudo systemctl status ssh
+[sudo] password for vishal: 
+○ ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/usr/lib/systemd/system/ssh.service; disabled; preset: enabled)
+     Active: inactive (dead)
+TriggeredBy: ● ssh.socket
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+vishal@vishal-VirtualBox:~/Downloads$ scp -r . vishal@Ubuntu20:/home/vishal/Downloads
+ssh: Could not resolve hostname ubuntu20: Temporary failure in name resolution
+scp: Connection closed
+vishal@vishal-VirtualBox:~/Downloads$ ping ubuntu20
+ping: ubuntu20: Temporary failure in name resolution
+vishal@vishal-VirtualBox:~/Downloads$ scp -r . vishal@10.0.2.15:/home/vishal/Downloads
+The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
+ED25519 key fingerprint is SHA256:qpUVRYBLTraNKwznUj3ti+HhTjYkiYT7uXIAkw4qMvU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? no
+Host key verification failed.
+scp: Connection closed
+vishal@vishal-VirtualBox:~/Downloads$ scp -r . vishal@10.0.2.15:/home/vishal/Downloads
+The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
+ED25519 key fingerprint is SHA256:qpUVRYBLTraNKwznUj3ti+HhTjYkiYT7uXIAkw4qMvU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.0.2.15' (ED25519) to the list of known hosts.
+vishal@10.0.2.15's password: 
+Vishal_LinuxTraining_Module2.txt                        100% 7755     1.7MB/s   00:00    
+Vishal_Linux Training_Module1                           100% 4369     1.9MB/s   00:00    
+Vishal_LinuxTraining_Module3_ScriptFile.txt             100% 1384   563.8KB/s   00:00    
+Vishal_LinuxTraining_Module4_Output.txt                 100%  110KB  21.9MB/s   00:00    
+Vishal_LinuxTraining_Module5_TerminalOUTPUT.txt         100%  954    84.4KB/s   00:00    
+Vishal_LinuxTraining_Module3_ScriptFile.sh              100% 1384   151.2KB/s   00:00    
+Vishal_LinuxTraining_Module3_TerminalOutput.txt         100% 2188   299.7KB/s   00:00    
+Campus Hires 2025 – Linux - Assessment Module 1-5.pptx  100%  445KB  28.5MB/s   00:00    
+ghostty_1.1.2-0.ppa1_amd64_24.04.deb                    100%   15MB  51.3MB/s   00:00 
+
+
+DESTINATION MACHINE:
+
+vishal@Ubuntu20:~/Downloads$ sudo systemctl enable --now ssh
+Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable ssh
+vishal@Ubuntu20:~/Downloads$ sudo systemctl status ssh
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: e>
+     Active: active (running) since Thu 2025-02-27 19:41:51 IST; 2min 32s ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 5624 (sshd)
+      Tasks: 1 (limit: 13085)
+     Memory: 1.0M
+     CGroup: /system.slice/ssh.service
+             └─5624 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+
+Feb 27 19:41:51 Ubuntu20 systemd[1]: Starting OpenBSD Secure Shell server...
+Feb 27 19:41:51 Ubuntu20 sshd[5624]: Server listening on 0.0.0.0 port 22.
+Feb 27 19:41:51 Ubuntu20 sshd[5624]: Server listening on :: port 22.
+Feb 27 19:41:51 Ubuntu20 systemd[1]: Started OpenBSD Secure Shell server.
+
+vishal@Ubuntu20:~/Downloads$ hostname -I
+10.0.2.15 
+
+2. Host a FTP and SFTP server and try PUT and GET Operations
+
+vishal@Ubuntu20:~$ sudo systemctl start vsftpd
+vishal@Ubuntu20:~$ sudo systemctl enable vsftpd
+Synchronizing state of vsftpd.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable vsftpd
+vishal@Ubuntu20:~$ sudo ufw allow 21/tcp
+Rules updated
+Rules updated (v6)
+vishal@Ubuntu20:~$ sudo adduser ftpuser
+Adding user `ftpuser' ...
+Adding new group `ftpuser' (1001) ...
+Adding new user `ftpuser' (1001) with group `ftpuser' ...
+Creating home directory `/home/ftpuser' ...
+Copying files from `/etc/skel' ...
+New password: 
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for ftpuser
+Enter the new value, or press ENTER for the default
+	Full Name []: 
+	Room Number []: 
+	Work Phone []: 
+	Home Phone []: 
+	Other []: 
+Is the information correct? [Y/n] y
+vishal@Ubuntu20:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:97:67:0c brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+       valid_lft 85439sec preferred_lft 85439sec
+    inet6 fe80::6268:bf4:66ca:67d6/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+vishal@Ubuntu20:~$ ip a | grep inet
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host 
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+    inet6 fe80::6268:bf4:66ca:67d6/64 scope link noprefixroute
+    
+FTP:  
+    
+vishal@Ubuntu20:~$ ftp 10.0.2.15
+Connected to 10.0.2.15.
+220 (vsFTPd 3.0.5)
+Name (10.0.2.15:vishal): 
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> put test.txt
+local: test.txt remote: test.txt
+200 PORT command successful. Consider using PASV.
+550 Permission denied.
+ftp> get test.txt
+local: test.txt remote: test.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for test.txt (0 bytes).
+226 Transfer complete.
+
+SMTP:
+vishal@Ubuntu20:~$ sftp 10.0.2.15
+The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
+ECDSA key fingerprint is SHA256:gy5v1MuCeRHdyQPoQqyXAKDDIicW3TqiXTkbwpLMzxg.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.0.2.15' (ECDSA) to the list of known hosts.
+vishal@10.0.2.15's password: 
+Connected to 10.0.2.15.
+sftp> put test.txt
+Uploading test.txt to /home/vishal/test.txt
+test.txt                                      100%    0     0.0KB/s   00:00    
+sftp> get test.txt
+Fetching /home/vishal/test.txt to test.txt
+
+3. Explore Wireshark and learn about packets filters.
+
+Wireshark allows packet filtering allowing effective examination of network traffic. filtering is crucial to identify the salient packets. Display filters assist with narrowing captured data, and capture filters restrict what is captured in the first place. Familiarity with filter syntax and utilization improves network investigation. 
+IP Filtering: ip.addr == 192.168.1.1 to isolate traffic involving a specific IP.
+Protocol-Based Filtering: http, dns, tcp, or udp to focus on specific traffic types.
+Port-Based Filtering: tcp.port == 443 for HTTPS traffic or udp.port == 53 for DNS queries.
+Packet Length Filtering: frame.len > 500 to analyze large data packets.
+Omitting unnecessary traffic, like ARP requests (!arp), minimizes noise and streamlines analysis. By ongoing discovery, users can combine custom scripts and sophisticated automation, and Wireshark becomes a valuable tool in cybersecurity and network troubleshooting.
+
+4. Understanding linux xommands
+
+PING:
+When a user runs ping google.com, it sends ICMP Echo Request packets and waits for responses. The output includes several key parameters: the bytes field shows the size of each packet sent (usually 64 bytes, including the ICMP header), the time (ms) field indicates the round-trip time for each packet, which helps measure network latency, and the TTL (Time To Live) value represents the maximum number of hops a packet can take before being discarded.
+
+ARP:
+The arp (Address Resolution Protocol) command is used to map IP addresses to MAC addresses within a local network. Running arp -a lists all devices that the system has recently communicated with, showing their IP addresses, corresponding MAC addresses, and the network interface through which they were detected. 
+
+NETSTAT:
+The netstat command provides a detailed view of active network connections, listening ports, and network statistics. Running netstat -tulnp shows all active TCP and UDP connections along with the processes using them. The output includes the protocol in use (TCP or UDP), the local address (IP and port of the local machine), and the foreign address, which indicates the remote machine the connection is established with. The state column displays the connection status, such as LISTEN for ports waiting for incoming connections or ESTABLISHED for active data transfers. 
+
+TRACEROUTE:
+The traceroute command helps visualize the path that packets take to reach a destination, which is particularly useful for diagnosing slow connections or network routing issues. When running traceroute google.com, the output lists the sequence of network hops the packet crosses before reaching Google’s servers. Each hop is displayed with its IP address or hostname, along with three response times (ms) showing how long it took for packets to travel to that hop and back. 
+
+IFCONFIG:
+The ifconfig command is used to display detailed information about network interfaces. Running ifconfig or ip a lists all available interfaces, such as eth0 for wired connections, wlan0 for wireless, and lo for the loopback interface. The output includes the IPv4 (inet) and IPv6 (inet6) addresses assigned to each interface, the MAC address, and the MTU (Maximum Transmission Unit)
+
+5. Understand what happens if a duplicate IPs configured in a network.
+
+When two devices in a network are assigned the same **IP address**, it creates an **IP conflict**, causing network disruptions. Since an IP address is meant to uniquely identify a device, the network cannot properly route traffic when duplicates exist. Typically, one or both devices will lose connectivity, and you might see errors like **"IP address conflict detected."** If a **DHCP server** is managing IPs, it usually prevents conflicts, but manually setting the same IP on multiple devices can cause this issue. Resolving it involves checking IP configurations, releasing and renewing addresses, or using **dynamic IP allocation (DHCP)** to prevent clashes.
+
+6. understanf how to access remote system using VNC viewer.
+
+To access a remote system using VNC Viewer, you first need to ensure that VNC Server is installed and running on the remote machine. If the remote system is Windows, you can install RealVNC Server or TightVNC and configure it to allow remote connections. On Linux, you can install a VNC server using:
+
+sudo apt install tigervnc-standalone-server  
+
+To start a server with : vncserver  
+To show the list of servers: vncserver -list
+
+Install VNC Viewer on your local machine. If you're connecting from Linux, install TigerVNC Viewer:
+
+sudo apt install tigervnc-viewer
+
+Now, open VNC Viewer and enter the IP address of the remote machine followed by :5901 (default VNC port for display 1). Alternatively, use this command from the terminal:
+
+vncviewer <remote-IP>:5901
+
+7. How to check default gateway is reachable or not and understand about default gateway.
+ 
+The default gateway is the router or device that connects your local network to other networks, like the internet. To check if it’s reachable, first find the gateway’s IP using:
+ip route | grep default 
+
+Then, use the ping command to test connectivity: ping <gateway-IP>
+\If you get replies, the gateway is reachable. If not, there may be network issues, incorrect configurations, or firewall blocks. If the default gateway is unreachable, internet access may fail, so troubleshooting includes checking cables, restarting the router, or verifying IP settings.
+
+8. check ifconfig to understand in detail about network interfaces.
+
+The ifconfig command in Linux provides detailed information about network interfaces, helping to understand how devices connect to a network. When you run ifconfig, it displays all active interfaces like eth0 (wired Ethernet), wlan0 (Wi-Fi), and lo (loopback interface used for internal communication). For each interface, it shows the IP address (inet) assigned to the device, MAC address (ether) for hardware identification, and netmask that defines the network's size. It also displays RX (received) and TX (transmitted) packet counts, helping track network usage. The MTU (Maximum Transmission Unit) indicates the largest packet size the interface can handle. If an interface is down, ifconfig won’t display it unless used with the -a option. This command is useful for diagnosing network problems, configuring IP addresses, or bringing interfaces up or down using options like ifconfig eth0 up or ifconfig eth0 down.
+
+
+9. Log-in to your home router's web interface and check the connected devices list
+
+vishal@vishal-VirtualBox:~$ ip route | grep default
+default via 10.0.2.2 dev enp0s3 proto dhcp src 10.0.2.15 metric 100 
+vishal@vishal-VirtualBox:~$ sudo arp-scan --localnet
+Interface: enp0s3, type: EN10MB, MAC: 08:00:27:75:4a:c2, IPv4: 10.0.2.15
+WARNING: Cannot open MAC/Vendor file ieee-oui.txt: Permission denied
+WARNING: Cannot open MAC/Vendor file mac-vendor.txt: Permission denied
+Starting arp-scan 1.10.0 with 256 hosts (https://github.com/royhills/arp-scan)
+10.0.2.2	52:54:00:12:35:02	(Unknown: locally administered)
+10.0.2.3	52:54:00:12:35:03	(Unknown: locally administered)
+10.0.2.4	52:54:00:12:35:04	(Unknown: locally administered)
+
+3 packets received by filter, 0 packets dropped by kernel
+Ending arp-scan 1.10.0: 256 hosts scanned in 1.998 seconds (128.13 hosts/sec). 3 responded
+
+10. EXplain how a DHCP server assigns IP addr to devices in your network
+
+A DHCP server (Dynamic Host Configuration Protocol) automatically assigns IP addresses to devices on a network, ensuring they can communicate without manual configuration. When a device (like a laptop or phone) connects, it sends a DHCP Discovery request asking for an IP. The server responds with an IP offer, suggesting an available address. The device then sends a DHCP Request to confirm, and the server finalizes the assignment with a DHCP Acknowledgment. This process also assigns a subnet mask, gateway, and DNS settings. DHCP prevents conflicts and efficiently manages IPs, ensuring smooth network connectivity without manual setup.
+
+11. Using Terminal, connect to a remote machine via SSH and telnet
+
+LINUX TERMINAL:
+vishal@vishal-VirtualBox:~$ sudo systemctl status ssh
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/usr/lib/systemd/system/ssh.service; disabled; preset: enabled)
+     Active: active (running) since Thu 2025-02-27 19:47:07 IST; 3h 8min ago
+TriggeredBy: ● ssh.socket
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+    Process: 10763 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+   Main PID: 10764 (sshd)
+      Tasks: 1 (limit: 13095)
+     Memory: 2.2M (peak: 4.5M)
+        CPU: 195ms
+     CGroup: /system.slice/ssh.service
+             └─10764 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Feb 27 19:47:07 vishal-VirtualBox systemd[1]: Starting ssh.service - OpenBSD Secure Shell>
+Feb 27 19:47:07 vishal-VirtualBox sshd[10764]: Server listening on :: port 22.
+Feb 27 19:47:07 vishal-VirtualBox systemd[1]: Started ssh.service - OpenBSD Secure Shell >
+Feb 27 19:47:11 vishal-VirtualBox sshd[10766]: Connection closed by 10.0.2.15 port 57160 >
+Feb 27 19:47:24 vishal-VirtualBox sshd[10773]: Accepted password for vishal from 10.0.2.1>
+Feb 27 19:47:24 vishal-VirtualBox sshd[10773]: pam_unix(sshd:session): session opened for>
+Feb 27 19:47:25 vishal-VirtualBox sshd[10773]: pam_unix(sshd:session): session closed for>
+Feb 27 19:53:12 vishal-VirtualBox sshd[11266]: Accepted password for vishal from 10.0.2.1>
+Feb 27 19:53:12 vishal-VirtualBox sshd[11266]: pam_unix(sshd:session): session opened for>
+lines 1-23/23 (END)
+vishal@vishal-VirtualBox:~$ ssh vishal@192.168.29.191
+vishal@192.168.29.191's password: 
+
+Microsoft Windows [Version 10.0.26100.3194]
+(c) Microsoft Corporation. All rights reserved.
+
+vishal@LAPTOP-2GPNTJBE C:\Users\Vishal>ls
+'ls' is not recognized as an internal or external command,
+operable program or batch file.
+
+vishal@LAPTOP-2GPNTJBE C:\Users\Vishal>cat
+'cat' is not recognized as an internal or external command,
+operable program or batch file.
+
+vishal@LAPTOP-2GPNTJBE C:\Users\Vishal>
+
+vishal@LAPTOP-2GPNTJBE C:\Users\Vishal>
+
+vishal@LAPTOP-2GPNTJBE C:\Users\Vishal>exit
+Connection to 192.168.29.191 closed.
+
+WINDOWS TERMINAL:
+
+PS C:\WINDOWS\system32> Start-Service sshd
+PS C:\WINDOWS\system32> ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet 2:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::f08c:f48a:5037:4ad6%20
+   Autoconfiguration IPv4 Address. . : 169.254.69.119
+   Subnet Mask . . . . . . . . . . . : 255.255.0.0
+   Default Gateway . . . . . . . . . :
+
+Wireless LAN adapter Local Area Connection* 1:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Local Area Connection* 2:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . :
+   IPv6 Address. . . . . . . . . . . : 2405:201:e028:f01a:2dd:610a:613c:1ef6
+   Temporary IPv6 Address. . . . . . : 2405:201:e028:f01a:e0ac:3144:73a2:4747
+   Link-local IPv6 Address . . . . . : fe80::3b6d:32af:500b:9229%18
+   IPv4 Address. . . . . . . . . . . : 192.168.29.191
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::aa88:1fff:fe05:ccc5%18
+                                       192.168.29.1
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
