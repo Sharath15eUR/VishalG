@@ -1,0 +1,97 @@
+1: Describe the significance of MAC layer and in which position it is placed in the OSI model
+
+The MAC (Media Access Control) layer is a sublayer of the Data Link Layer, which is Layer 2 in the OSI (Open Systems Interconnection) model. The Data Link Layer is divided into two sublayers: the Logical Link Control (LLC) and the Media Access Control (MAC). The MAC layer is responsible for controlling how devices in a network uniquely identify themselves and access the shared physical medium.
+
+One of the key roles of the MAC layer is to manage access to the transmission medium. It determines when a device can transmit data, helping to prevent collisions and ensuring efficient use of the network. Techniques such as Carrier Sense Multiple Access with Collision Detection (CSMA/CD) used in Ethernet or Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA) used in Wi-Fi are implemented at this layer.
+
+The MAC layer is also responsible for framing, which involves encapsulating network layer data into frames that can be transmitted over the network. It adds MAC addresses to these frames to identify the source and destination devices within a local network. Additionally, it includes error detection mechanisms, such as Cyclic Redundancy Check (CRC), to ensure data integrity during transmission.
+
+Technologies like Ethernet (IEEE 802.3) and Wi-Fi (IEEE 802.11) heavily rely on the MAC layer for proper communication. By regulating how data is transmitted and ensuring that devices take turns accessing the medium, the MAC layer plays a vital role in the overall efficiency and reliability of data communication in computer networks.
+
+2: Describe the frame format of the 802.11 MAC header and explain the purpose of each fields
+
+802.11 MAC header consist of Frame control(2 octets), Duration/ID (2 octets), Address being divided into 3 Address of 6 octets each and followed by Sequence control of 2 octets. another part of address for 6 octet with QoS control of 2 octet and HT Control of 4 octets. The frame control is divided into Protocol version (2 bits) with Type of 2 bits and Subtype of 4 bits. Other 8 bits are divided into 1 bit each for toDS, FromDS, More Frag, Retry, Power management, More Data, Protected frame and HTC / Order.
+
+The Frame Control field is 2 bytes long and defines the type of frame and how it should be processed. It includes multiple subfields such as the protocol version, type and subtype (which indicate whether the frame is management, control, or data), and directional flags like To DS and From DS.
+The Duration/ID field, also 2 bytes in length, specifies the time (in microseconds) that the medium is reserved for the transmission.
+
+Sequence Control (2 bytes): Used for fragment tracking and ordering of frames. Contains:
+Sequence Number: Helps in ordering frames.
+Fragment Number: Indicates the position of a fragment if a frame is split.
+
+QoS Control (2 bytes, optional): Present in QoS data frames. It includes information like traffic priority level and helps with scheduling traffic like voice or video for smoother delivery.
+
+HT Control (4 bytes, optional): Used in high throughput (802.11n and later) for advanced control features, like beamforming or sounding.
+
+Frame Body (variable length): This is the payload/data being transported. It could be management information, control commands, or user data.
+
+FCS (Frame Check Sequence - 4 bytes): Provides a checksum (CRC) to detect errors in the entire frame. If the checksum doesn’t match at the receiver, the frame is discarded.
+
+3. Please list all the MAC layer functionalities in all Management, Control and Data plane.
+
+Management Frame: Beacon transmission, Association and disassociation, Channel Switch, Announcement Frame.
+
+Control Frame: RTS, CTS, Block ACK, Ps-poll
+
+Data Frame: QoS Data Frame, QoS NULL data frames.
+
+4. Explain the scanning process and its types in detail
+
+In passive scanning, the station listens for beacon frames that are periodically broadcast by access points. These beacons include important information such as the network’s SSID, BSSID, supported rates, timestamp, and capability information. The station scans each channel one at a time, remaining on each for a short duration to receive any beacon frames. This method is quiet since the station does not send any frames, making it suitable for power-sensitive or secure environments. However, it can be slower, especially if beacon intervals are long, and may not detect networks with hidden SSIDs.
+
+In active scanning, the station sends out a probe request frame on each channel, asking for nearby APs to respond. APs that match the request (or all APs, if the SSID is set to broadcast) reply with probe response frames, which contain similar information to beacon frames. Active scanning is typically faster and can discover hidden SSIDs if the device already knows them. However, it generates more network traffic and consumes more power compared to passive scanning.
+
+Passive scanning is more efficient in environments where minimal traffic and low power consumption are priorities. On the other hand, active scanning is ideal when faster network discovery is required or when connecting to a hidden network. Devices often use a combination of both scanning methods to achieve a balance between speed, efficiency, and power usage.
+
+5. Brief about the client association process.
+
+This process involves multiple stages that ensure the client is authenticated, associated, and able to communicate effectively over the network.
+
+Initially, the station scans for available networks using either passive or active scanning to discover nearby APs. Once it identifies a suitable AP (based on SSID, signal strength, or security settings), it proceeds to initiate authentication. Authentication is the process by which the AP and the client verify each other’s identity. Depending on the security protocol used (e.g., Open System, WPA2-Enterprise), this step may be simple or involve complex exchanges like EAP.
+
+After successful authentication, the station sends an association request frame to the AP. This request includes the client's capabilities and supported features, such as data rates and QoS options. If the AP accepts the request, it responds with an association response frame, indicating that the client is now officially associated with the network.
+
+Once associated, the client is allocated an Association ID (AID) and can begin data communication with the AP. The network may also perform additional procedures like IP address assignment (via DHCP) and security key exchange (e.g., 4-way handshake in WPA2) before full connectivity is established.
+
+6. Explain each steps involved in EAPOL 4 way handshake and the purpose of each keys derived from the process.
+
+First step, the access point (AP) sends a Message 1 to the client. This message contains a Nonce (a random number known as ANonce) and other security parameters. The ANonce is used in conjunction with the client’s own random number (SNonce), the pre-shared key (PSK), and the MAC addresses of both the AP and client to generate a common Pairwise Transient Key (PTK). This key derivation is performed independently by both the client and the AP.
+
+In the second step, the client, upon receiving the ANonce, generates its own random number (SNonce) and computes the PTK. It then sends Message 2 to the AP, which includes the SNonce and a Message Integrity Code (MIC) to confirm the authenticity of the message. This MIC is computed using the PTK to prove that the client has derived the same PTK. At this point, both the client and the AP should have identical PTKs.
+
+In the third step, the access point verifies the MIC sent by the client to ensure that the PTK was correctly computed. Upon successful verification, the AP installs the encryption keys (such as PTK) into its transmission engine. It then sends Message 3 back to the client, which includes a Group Temporal Key (GTK) encrypted using the PTK. The GTK is used to decrypt broadcast and multicast traffic on the network. This message also contains a MIC for validation.
+
+In the fourth and final step, the client installs the PTK and the received GTK. It confirms the successful installation by replying with Message 4, which includes another MIC. This completes the 4-Way Handshake, and both the AP and client now possess the same set of encryption keys for secure communication.
+
+7. Describe the power saving scheme in MAC layer and explore on the types of power saving mechanism
+
+When the wireless client is idle and associated, the client sends a frame "QoS NULL Frame" with the power management bit set to 1 in the FC field of the 802.11 header and foes to sleep by switching off the radio.
+
+Based on the Beacon DTIM interval, the client wakes up and check the Tim IE in the Beacon frame and check for PVB which is a bitmap of the AIDs of all the associated STA's.
+Each bit in the Bitmap represent the AID. If the 1st bit is set then the client with AID's data is pending at the AP to be transmitted to the client.
+The client after parsing the PVB and if it finds its AIS is set in the PVB. It send a Ps-Poll control to the AP to retrieve the data from the AP.
+
+8. Describe the Medium Access control methodologies.
+
+Distributed Coordination Function (DCF) is the fundamental MAC technique used in most Wi-Fi networks. It operates based on Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA). In DCF, each station listens to the medium and transmits only when it senses that the channel is idle. If the medium is busy, the station waits for a random backoff period before attempting to transmit again. DCF is completely decentralized, meaning that every station contends equally for the channel without any central coordination. It also includes optional mechanisms like RTS/CTS (Request to Send/Clear to Send) to reduce the risk of collisions, especially in the presence of hidden nodes. 
+
+Point Coordination Function (PCF), on the other hand, is an optional centralized MAC technique designed to support time-sensitive data transmission, like voice or video. It uses a contention-free polling mechanism where a central coordinator, usually the Access Point (AP), controls access to the medium. The AP polls each station in a pre-defined order and grants them exclusive access to transmit. 
+
+EDCA is a Qos Enhanced DCF, while PCF and DCP treats all traffic as same but EDCA considers the traffic priority into consideration while contending for channel access. It extends the basic Distributed Coordination Function (DCF) by categorizing traffic into four Access Categories (ACs): Voice, Video, Best Effort, and Background. Each category has its own contention parameters—like Arbitration Inter-Frame Space (AIFS), Contention Window (CW), and Transmission Opportunity (TXOP)—to control how quickly it can access the medium. Higher priority traffic, like voice and video, gets shorter wait times and smaller contention windows, ensuring faster and more reliable delivery.
+
+
+9. Brief about the Block ACK mechanism and its advantages.
+
+Block ACK (Acknowledgment) is a MAC layer mechanism introduced in IEEE 802.11e to enhance the efficiency of data transmission, particularly when dealing with multiple frames. Instead of acknowledging each frame individually with a separate ACK, Block ACK allows the receiver to send a single acknowledgment for a group of frames. This is initiated when the sender and receiver agree to use Block ACK through a Block ACK Request (BAR).
+
+Once a burst of frames is received, the receiver responds with a Block ACK frame that includes a bitmap indicating which frames were successfully received and which were not. This allows the sender to retransmit only the missing frames rather than the entire group.
+
+One major advantage of Block ACK is reduced overhead, as fewer ACK frames are transmitted, conserving time and bandwidth. This also leads to higher throughput and more efficient use of the communication channel, especially in environments with high data traffic or large frame bursts.
+
+10. Explain about A-MSDU, A-MPDU and A-MSDU in A-MPDU
+
+A-MSDU (Aggregated MAC Service Data Unit) is a frame aggregation technique used in IEEE 802.11 to improve wireless throughput. In A-MSDU, multiple MAC Service Data Units (MSDUs) are combined into a single MAC Protocol Data Unit (MPDU). These aggregated frames share a single MAC header and are sent together, reducing header overhead. However, since all the subframes are inside one MPDU, if any part of the A-MSDU is corrupted, the entire frame must be retransmitted.
+
+A-MPDU (Aggregated MAC Protocol Data Unit) is another aggregation method where multiple MPDUs are bundled into one PHY layer frame. Unlike A-MSDU, each MPDU in an A-MPDU retains its own MAC header and Frame Check Sequence (FCS), allowing selective retransmission of only the corrupted MPDUs. This makes A-MPDU more robust in noisy environments and suitable for high-throughput applications.
+
+A-MSDU in A-MPDU is a hybrid approach where each MPDU in the A-MPDU can itself contain an A-MSDU. This combines the efficiency of A-MSDU's reduced header overhead with A-MPDU’s selective retransmission capability. By nesting A-MSDUs within A-MPDUs, the mechanism provides both high throughput and improved reliability.
