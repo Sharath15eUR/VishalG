@@ -1,0 +1,75 @@
+VISHAL G							WIFI MOD 6 ASSIGNMENT
+
+1. What are the pillars of WIFI security?
+
+Authentication
+Authentication ensures that only authorized users and devices can connect to the Wi-Fi network. It verifies identities using methods like WPA3-Enterprise, 802.1X with RADIUS servers, or simpler methods like WPA2-Personal with a shared password.
+
+Confidentiality
+Confidentiality ensures that sensitive information remains private. Encryption and secure authentication work together to make sure that only the intended recipient can access the transmitted data, maintaining user privacy over the network.
+
+Integrity
+Integrity mechanisms ensure that data packets are not tampered with during transmission. Wi-Fi uses protocols like CCMP (Counter Mode with Cipher Block Chaining Message Authentication Code Protocol) to detect and prevent data modification or corruption attacks.
+
+
+2. Explain the differences between authentication and encryption in WIFI security.
+
+Authentication in Wi-Fi security is the process that verifies who you are before allowing access to the network. It ensures that only authorized users and devices can connect. When you attempt to join a Wi-Fi network, your credentials (such as a password, certificate, or enterprise login) are checked to validate your identity
+Encryption protects what you send once you are connected. It scrambles your data into an unreadable format so that even if someone intercepts it, they cannot understand or misuse it without the proper decryption key. Encryption kicks in after authentication is successful, ensuring that all communications between your device and the Wi-Fi access point remain private and secure. 
+
+3. Explain the differences between WEP, WPA, WPA2 and WPA3.
+
+WEP: Wired Equivalent Privacy
+Uses Encryption keys to encrypt the data. WEP had major vulnerabilities, mainly due to weak encryption using the RC4 cipher and poor key management.
+
+WPA: WPA improved security by introducing TKIP (Temporal Key Integrity Protocol), which dynamically changes encryption keys for each packet.
+
+WPA2: It replaced RC4 and TKIP with AES (Advanced Encryption Standard) and CCMP (Counter Mode with Cipher Block Chaining Message Authentication Code Protocol), providing much better encryption and data integrity. Mainly it is into 2 types, WPA2-personal and WPA2-Enterprice.
+
+WPA3: It introduces Simultaneous Authentication of Equals (SAE), replacing the weaker Pre-Shared Key (PSK) method used in WPA2. WPA3 provides stronger protection against brute-force attacks, forward secrecy to protect past data even if keys are compromised.
+
+4. Why is WEP considered insecure compared to WPA2 or WPA3?
+
+WEP encrypt using RC4 stream cipher and a shared key (either 40-bit or 104-bot, plis a 24 bit init vector).
+The same key is shared across all devices, making it less secure. Similarly Key for encryption is reused for all packers, making it easier for attackers to crack the key. Initialization vector (IV) get reused for multiple packets over time, which can also be exploited by attacker. While this is avoided in WPA higher version.
+WPA2: It replaced RC4 and TKIP with AES (Advanced Encryption Standard) and CCMP (Counter Mode with Cipher Block Chaining Message Authentication Code Protocol), providing much better encryption and data integrity. Mainly it is into 2 types, WPA2-personal and WPA2-Enterprice.
+WPA3: It introduces Simultaneous Authentication of Equals (SAE), replacing the weaker Pre-Shared Key (PSK) method used in WPA2. WPA3 provides stronger protection against brute-force attacks, forward secrecy to protect past data even if keys are compromised.
+
+5. Why was WPA2 introduced?
+
+WPA2 was introduced to fix the security weaknesses of WPA and to provide a long-term, robust security standard for Wi-Fi networks.
+
+While WPA (Wi-Fi Protected Access) was a quick, transitional improvement over the highly vulnerable WEP (Wired Equivalent Privacy), it still had flaws. WPA relied on the older RC4 encryption algorithm and TKIP (Temporal Key Integrity Protocol), which, over time, were found to have vulnerabilities that could be exploited by attackers. As Wi-Fi usage grew rapidly for sensitive applications like banking, healthcare, and enterprise operations, there was a pressing need for a stronger and more future-proof security framework.
+
+6. What is the role of Pairwise master key (PMK) in the 4 way handshake?
+
+Pairwise master key is derived from MSK seeding material. PMK is first 256bits (0-255) of MSK. It can be derived from an EAP method or directly from a Preshared Key (PSK). It is the main shared secret between the client (supplicant) and the Access Point (authenticator). The PMK is used to derive the Pairwise Transient Key (PTK), which encrypts actual data frames between the client and the AP.
+Both the client and AP already have the PMK (from PSK, EAP authentication, or SAE depending on the security mode).
+They exchange nonces (random numbers) and MAC addresses.
+Using:
+PTK = PRF(PMK, Nonce_AP, Nonce_Client, MAC_AP, MAC_Client)(PRF = Pseudo-Random Function) Thus, PMK ensures that both sides independently derive the same PTK without actually transmitting the PMK over the air.
+
+7. How does the 4-way handshake ensure mutual authentication between the client and the access point?
+
+
+In the 4-way handshake, mutual authentication between the client and the access point is achieved by proving that both sides know the Pairwise Master Key (PMK) without actually transmitting it over the air. This is done through the exchange of cryptographic messages that include a Message Integrity Code (MIC), which is generated using a newly derived Pairwise Transient Key (PTK). Since the PTK is derived from the PMK along with exchanged nonces and MAC addresses, the successful validation of these MICs proves possession of the PMK.
+
+The process begins when the access point sends a random value called the ANonce to the client. The client then uses this ANonce, its own generated SNonce, the MAC addresses, and the shared PMK to derive the PTK. It sends back the SNonce along with a MIC generated using the PTK. The access point also derives the PTK independently using the same information and verifies the MIC sent by the client. If the MIC is valid, the AP knows the client has the correct PMK.
+
+Next, the access point sends its own MIC-protected message back to the client. The client verifies this MIC using its own derived PTK. If the MIC matches, it confirms that the access point also possesses the correct PMK. If any MIC verification fails at any point, the handshake is aborted, preventing unauthorized devices from connecting.
+
+8. What will happen if we put a wrong passphrase during a 4WAY handshake?
+
+With MIC verification 2/4 messages are completed. If user enters the wrong passphrase then there will be a MIC failure and we dont see the messages after the Message 2. The client and access point will derive different PMKs because the PMK is based on the passphrase. As a result, when they use these incorrect PMKs to generate the PTK, the PTKs will also be different. Therefore, when the client or AP tries to verify the MIC (Message Integrity Code) during the handshake, the verification will fail because the MIC depends on the correct PTK. When MIC verification fails, the handshake aborts immediately — no secure session is established.
+
+9. What problem does 802.1X solve in network?
+
+Specifically, it ensures that only authenticated devices/users can connect to the network (wired or wireless). It acts like a gatekeeper at the network entry point, requiring a valid authentication (like username/password, certificate, or token) before allowing any traffic beyond a restricted state.
+
+10. How does 802.1X enhance security over wireless networks?
+
+
+It requires users/devices to authenticate (using credentials, certificates, or tokens) before they get access to the network — unlike simple open networks or just pre-shared keys (PSK).
+Instead of sharing a single Wi-Fi password (like in WPA2-PSK), each user has unique credentials, making it harder for attackers to breach the system.
+After successful authentication, 802.1X (working with WPA2/WPA3-Enterprise) triggers the creation of unique encryption keys for each session (e.g., dynamic session keys), protecting against eavesdropping and replay attacks. Unauthenticated devices are kept in a restricted state (no full network access), allowing network administrators to apply fine-grained access policies.
+

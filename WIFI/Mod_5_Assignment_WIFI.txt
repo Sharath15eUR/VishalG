@@ -1,0 +1,82 @@
+VISHAL G 			Mod 5 WIFI Assignment
+
+1. What are the key features of WIFI 6, 6E and 7 and how do they differ from previous  standards like WIFI 5 (802.11ac)? 
+
+Wi-Fi 5 (802.11ac), introduced in 2014, operates exclusively in the 5 GHz frequency band. It brought significant speed improvements over its predecessor, supporting up to 80 MHz channel widths (with optional 160 MHz) and maximum theoretical data rates of around 3.5 Gbps. It uses 256-QAM for modulation and supports up to 4x4 MU-MIMO, but only on the downlink. However, it was not designed with high-density environments or low-latency applications in mind, making it less suitable for today's complex networks with multiple devices.
+
+Wi-Fi 6 (802.11ax), launched in 2019, introduced a host of new features focused on efficiency and capacity rather than just speed. It supports both 2.4 GHz and 5 GHz bands, uses 1024-QAM modulation for a 25% data rate boost over Wi-Fi 5, and allows up to 160 MHz channels. Major additions include OFDMA, which lets multiple users share a single channel efficiently, and bidirectional MU-MIMO for simultaneous uplink and downlink communication. Features like Target Wake Time (TWT) help conserve battery for IoT devices, and BSS Coloring minimizes interference in crowded environments.
+
+Wi-Fi 6E, introduced in 2020, is essentially Wi-Fi 6 extended into the 6 GHz band. It retains all the features of Wi-Fi 6 but adds access to a much larger and cleaner spectrum. This new 6 GHz band allows up to 1200 MHz of additional spectrum, opening up 14 new 80 MHz channels or 7 new 160 MHz channels. Because only Wi-Fi 6E devices can use this band, there’s minimal interference, leading to better performance, lower latency, and higher throughput in dense network environments.
+
+Wi-Fi 7 (802.11be), expected to roll out in 2024–25, is a major leap forward aimed at delivering extremely high speeds and ultra-low latency. It supports operation in the 2.4 GHz, 5 GHz, and 6 GHz bands and introduces 320 MHz channel widths—double that of Wi-Fi 6. With 4096-QAM modulation, Wi-Fi 7 can achieve theoretical speeds up to 46 Gbps. Key innovations include Multi-Link Operation (MLO), which allows devices to use multiple frequency bands simultaneously, and Preamble Puncturing, which enables more flexible use of spectrum despite interference. Enhanced OFDMA and MU-MIMO support more devices with better performance, while deterministic latency makes it ideal for AR/VR, cloud gaming, and real-time video applications.
+
+2. Explain the role of OFDMA in WIFI and how it improves network efficiency.
+
+OFDMA divides a Wi-Fi channel into smaller sub-channels called Resource Units (RUs). With OFDMA, multiple devices can transmit or receive data at the same time within the same channel, each using a different RU. This simultaneous transmission reduces wait time, improves responsiveness, and allows for much better use of the available spectrum. Instead of one device using the full 20 MHz channel to send a small data packet, four devices can each use 5 MHz segments at the same time. This makes OFDMA particularly powerful in high-density environments like offices, stadiums, or smart homes, where many devices are competing for bandwidth.
+
+It improves robustness against inter-symbol interference(ISI) and multipath fading. It allows better performance in outdoor and dense indoor environments (eg. stadium, airport).
+It enhances spectral efficiency by reducing guard interval overhead. More subcarriers as it supports up to 234 usable subcarriers.
+
+3. Discuss the benefits of Target wake time (TWT) in WIFI 6 for IOT Devices.
+
+IOT devices could sleep most of the time, only waking up at scheduled intervals, while it tend to stay awake longer checking for data to send/receive in traditional WIFI Models. This is great for battery-operated device like sensors, wearables, smart home gear etc.
+This not only reduces power consumption but also minimizes network congestion, since devices are not all trying to access the network at random times.
+
+4. Explain the significance of the 6 GHz frequency band in WIFI 6E.
+
+The 6 GHz band, available only to Wi-Fi 6E (and upcoming Wi-Fi 7) devices, offers a massive amount of new, clean spectrum—up to 1200 MHz in some regions. This opens up 14 additional 80 MHz channels or 7 additional 160 MHz channels, ideal for high-bandwidth applications.
+The significance of the 6 GHz band lies in its ability to greatly reduce interference and congestion. Since only Wi-Fi 6E devices can access this band, it avoids legacy device traffic and provides a faster, more reliable connection. It also supports wider channels and lower latency, which is crucial for real-time use cases like 4K/8K video streaming, VR/AR, cloud gaming, and large file transfers.
+
+5. Compare and contrast WIFI 6 and WIFI 6E in terms of range, bandwidth and interference.
+
+Range
+
+Wi-Fi 6 operates in both 2.4 GHz and 5 GHz bands. The 2.4 GHz band offers better range and wall penetration, making it more suitable for wider coverage in homes and offices.
+Wi-Fi 6E uses only the 6 GHz band, which has shorter range and weaker wall penetration compared to 2.4 GHz and 5 GHz. It's better suited for open spaces or line-of-sight environments.
+
+Bandwidth
+
+Wi-Fi 6 supports bandwidths up to 160 MHz, but these are limited in availability due to existing congestion in the 5 GHz band.
+Wi-Fi 6E significantly improves on this by adding up to 1200 MHz of new spectrum, enabling more non-overlapping 160 MHz channels, which is ideal for high-speed, low-latency applications like AR/VR and 8K streaming.
+
+Interference
+
+Wi-Fi 6 shares the 2.4 GHz and 5 GHz bands with many legacy Wi-Fi devices and other household electronics (like microwaves, Bluetooth), leading to higher interference.
+Wi-Fi 6E operates on a dedicated, less crowded 6 GHz band that is free from legacy device interference, resulting in cleaner signals and more consistent performance, especially in dense environments.
+
+6. What are the major innovations introduced in WIFI 7 (802.11be)?
+
+It can operate across 2.4 GHz, 5 GHz and 6GHz bands, with major enhancements in both PHY and MAC layer. Wi-Fi 7 doubles the maximum channel width from 160 MHz (in Wi-Fi 6/6E) to 320 MHz, enabling significantly higher throughput. These wider channels are available primarily in the 6 GHz band. Wi-Fi 7 increases the modulation scheme to 4096-QAM, up from 1024-QAM in Wi-Fi 6.
+MLO (Multi Link operation) allows devices to simultaneously transmit and receive across multiple bands (2.4 GHz, 5 GHz, and 6 GHz).
+Wi-Fi 7 improves upon OFDMA and MU-MIMO by supporting more users simultaneously and offering higher data rates per user. This is especially beneficial in high-density environments like stadiums and enterprise networks. Wi-Fi 7 introduces features to ensure predictable, ultra-low latency, which is crucial for applications such as AR/VR, cloud gaming, industrial automation, and real-time video conferencing.
+
+7.Explain the concept of MLO and its impact on throughput and latency.
+
+Multiple frequency mainly 2.4GHz . 5Ghz and 6GHz are used parallelly. It aggregates across links. This in turn boosts speed, reliability and redundancy. As WIFI 7 supports intervals it reduces latency due to high spectral efficiency. Ideal for Low-latency application like gaming.
+Wi-Fi devices operate on a single band at a time. MLO changes this by enabling parallel transmissions across multiple bands, effectively bonding them into a unified connection. For example, a laptop with MLO can download data over 5 GHz while uploading via 6 GHz at the same time, or combine both for faster throughput.
+If one link experiences interference or congestion, traffic can be instantly rerouted to a cleaner band—reducing delay and jitter. This is especially valuable for latency-sensitive applications like gaming, video conferencing, and AR/VR.
+
+8. What is the purpose of 802.11k and v, how does it aid in roaming?
+
+802.11k helps a WIFI client, static traffic analyser quicky find its best AP to roam to, instead of scanning all channels blindly.
+It generates the list of nearby Aps with details like channel, BSSID, signal strength etc.
+
+802.11v enables network-assisted client management- helps the AP guide STAs(client_ about when and where to roam, manage power and optimise network behaviour.
+AP can suggest better Aps for the client to roam to, instead of waiting for the client to make the decision. it also suggest transitions based on real0time load balancing and signal quality.
+
+9. Explain the concept of Fast BSS transition (802.11r) and its benefit in mobile environment.
+
+In traditional Wi-Fi, when a device moves from one AP to another (called a Basic Service Set (BSS) transition), it has to go through a full security handshake again (like 802.1X authentication), which causes delay and brief connection drops.
+802.11r introduces a Fast Transition (FT) protocol, which pre-authenticates the device with nearby APs before the move happens. This way, when the device roams, it can quickly switch without repeating the full security handshake.
+
+In environments where users are constantly moving—like offices, airports, hospitals, or while using mobile devices—802.11r significantly reduces roaming time to just a few milliseconds.
+This ensures seamless connectivity, prevents noticeable lag, and improves the experience for applications like VoIP calls, video conferencing, real-time gaming, and AR/VR, where even short interruptions can cause major disruptions.
+
+10. How do 802.11k/v/r work together to provide seamless roaming in enterprise networks?
+
+802.11k helps devices roam more efficiently by allowing the current AP to provide a list of nearby APs (a "neighbor report"). Instead of blindly scanning for networks, the device knows exactly where to look for the best next AP, which reduces scan time and speeds up roaming decisions.
+802.11v adds further intelligence by allowing the network to actively assist the device in roaming. The AP can suggest which AP the device should move to, based on factors like signal strength, congestion, or network conditions.
+Once the device decides to roam (with help from 802.11k/v), 802.11r ensures the handoff happens almost instantly by using a pre-negotiated authentication process. This removes the typical delays of re-authentication.
+
+
+
