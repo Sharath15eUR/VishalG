@@ -1,0 +1,524 @@
+VISHAL G		Advanced C Assignment 2
+1. C program with 3 threads, to print sum of N prime numbers and other 2 to print a string at a specific time intervals.
+
+Code:
+
+#include <stdio.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+bool is_prime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i * i <= n; ++i)
+        if (n % i == 0) return false;
+    return true;
+}
+
+void* thread_a_func(void* arg) {
+    int N = *(int*)arg;
+    int count = 0, sum = 0, num = 2;
+
+    while (count < N) {
+        if (is_prime(num)) {
+            sum += num;
+            count++;
+        }
+        num++;
+    }
+
+    int* result = malloc(sizeof(int));
+    *result = sum;
+    pthread_exit(result);
+}
+
+void* thread_b_func(void* arg) {
+    time_t start = time(NULL);
+    while (difftime(time(NULL), start) < 100) {
+        printf("Thread 1 running\n");
+        sleep(2);
+    }
+    return NULL;
+}
+
+void* thread_c_func(void* arg) {
+    time_t start = time(NULL);
+    while (difftime(time(NULL), start) < 100) {
+        printf("Thread 2 running\n");
+        sleep(3);
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t thread_a, thread_b, thread_c;
+    int N;
+
+    printf("Enter the value of N for prime sum: ");
+    scanf("%d", &N);
+
+    // Start threads
+    pthread_create(&thread_a, NULL, thread_a_func, &N);
+    pthread_create(&thread_b, NULL, thread_b_func, NULL);
+    pthread_create(&thread_c, NULL, thread_c_func, NULL);
+
+    int* result;
+    pthread_join(thread_a, (void**)&result);
+    printf("Sum of first %d prime numbers is: %d\n", N, *result);
+    free(result);
+
+    // Wait for threads B and C to complete
+    pthread_join(thread_b, NULL);
+    pthread_join(thread_c, NULL);
+
+    return 0;
+}
+
+
+RESULT:
+Enter the value of N for prime sum: 5
+Thread 2 running
+Thread 1 running
+Sum of first 5 prime numbers is: 28
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+
+
+2. C program to include Signal handling to the above threads.
+CODE:
+
+#include <stdio.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <signal.h>
+
+volatile sig_atomic_t stop = 0;
+
+// SIGINT handler
+void handle_sigint(int sig) {
+    printf("\nSIGINT received (Ctrl+C). Preventing termination. Use another method to exit.\n");
+    // stop = 1;
+}
+
+// Utility: Check if a number is prime
+bool is_prime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i * i <= n; ++i)
+        if (n % i == 0) return false;
+    return true;
+}
+
+// Thread A: Sum of first N prime numbers
+void* thread_prime_sum(void* arg) {
+    int N = *(int*)arg;
+    int count = 0, sum = 0, num = 2;
+
+    while (count < N && !stop) {
+        if (is_prime(num)) {
+            sum += num;
+            count++;
+        }
+        num++;
+    }
+
+    int* result = malloc(sizeof(int));
+    *result = sum;
+    pthread_exit(result);
+}
+
+// Thread B: Prints message every 2 seconds
+void* thread_msg_2sec(void* arg) {
+    int elapsed = 0;
+    while (elapsed < 100 && !stop) {
+        printf("Thread 1 running\n");
+        sleep(2);
+        elapsed += 2;
+    }
+    return NULL;
+}
+
+// Thread C: Prints message every 3 seconds
+void* thread_msg_3sec(void* arg) {
+    int elapsed = 0;
+    while (elapsed < 100 && !stop) {
+        printf("Thread 2 running\n");
+        sleep(3);
+        elapsed += 3;
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t thread_a, thread_b, thread_c;
+    int N;
+
+    // Install SIGINT handler
+    signal(SIGINT, handle_sigint);
+
+    printf("Enter the value of N for prime sum: ");
+    scanf("%d", &N);
+
+    printf("\n[Main] Starting threads...\n");
+
+    // Start threads
+    pthread_create(&thread_a, NULL, thread_prime_sum, &N);
+    pthread_create(&thread_b, NULL, thread_msg_2sec, NULL);
+    pthread_create(&thread_c, NULL, thread_msg_3sec, NULL);
+
+    // Wait for thread A to finish
+    int* result;
+    pthread_join(thread_a, (void**)&result);
+    if (!stop) {
+        printf("[Main] Sum of first %d prime numbers: %d\n", N, *result);
+    } else {
+        printf("[Main] Thread A interrupted before completion.\n");
+    }
+    free(result);
+
+    // Wait for B and C
+    pthread_join(thread_b, NULL);
+    pthread_join(thread_c, NULL);
+
+    printf("[Main] Program finished.\n");
+    return 0;
+}
+
+
+
+RESULT:
+vishal@LAPTOP-2GPNTJBE:~/dev$ gcc -pthread -o thread1 thread1.c
+vishal@LAPTOP-2GPNTJBE:~/dev$ ./thread1
+Enter the value of N for prime sum: 5
+
+[Main] Starting threads...
+Thread 1 running
+Thread 2 running
+[Main] Sum of first 5 prime numbers: 28
+Thread 1 running
+Thread 2 running
+Thread 1 running
+^C
+SIGINT received (Ctrl+C). Preventing termination. Use another method to exit.
+Thread 2 running
+Thread 1 running
+Thread 1 running
+Thread 2 running
+Thread 1 running
+Thread 2 running
+
+
+
+2.1 Individual thread as functions and checking the time taken and the flow of execution
+
+CODE:
+
+#include <stdio.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <signal.h>
+#include <time.h>
+#include <string.h>
+
+volatile sig_atomic_t stop = 0;
+
+void handle_sigint(int sig) {
+    printf("\n[SIGNAL] SIGINT received. Preventing termination.\n");
+    stop = 1;
+}
+
+
+bool is_prime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i * i <= n; ++i)
+        if (n % i == 0) return false;
+    return true;
+}
+
+
+void* prime_sum_thread(void* arg) {
+    int N = *(int*)arg;
+    int count = 0, sum = 0, num = 2;
+
+    time_t start = time(NULL);
+    printf("[Thread A] Start: %s", ctime(&start));
+
+    while (count < N && !stop) {
+        if (is_prime(num)) {
+            sum += num;
+            count++;
+        }
+        num++;
+    }
+
+    time_t end = time(NULL);
+    printf("[Thread A] End: %s", ctime(&end));
+    printf("[Thread A] Duration: %.2f seconds\n", difftime(end, start));
+
+    int* result = malloc(sizeof(int));
+    *result = sum;
+    return result;
+}
+
+void* print_thread1(void* arg) {
+    time_t start = time(NULL);
+    printf("[Thread B] Start: %s", ctime(&start));
+
+    int elapsed = 0;
+    while (elapsed < 100 && !stop) {
+        printf("[Thread B] Thread 1 running\n");
+        sleep(2);
+        elapsed += 2;
+    }
+
+    time_t end = time(NULL);
+    printf("[Thread B] End: %s", ctime(&end));
+    printf("[Thread B] Duration: %.2f seconds\n", difftime(end, start));
+    return NULL;
+}
+
+void* print_thread2(void* arg) {
+    time_t start = time(NULL);
+    printf("[Thread C] Start: %s", ctime(&start));
+
+    int elapsed = 0;
+    while (elapsed < 100 && !stop) {
+        printf("[Thread C] Thread 2 running\n");
+        sleep(3);
+        elapsed += 3;
+    }
+
+    time_t end = time(NULL);
+    printf("[Thread C] End: %s", ctime(&end));
+    printf("[Thread C] Duration: %.2f seconds\n", difftime(end, start));
+    return NULL;
+}
+
+void setup_sigint_handler() {
+    struct sigaction sa;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+}
+
+int get_input() {
+    int N;
+    char input[100];
+
+    while (1) {
+        printf("Enter the value of N for prime sum: ");
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            if (stop) {
+                printf("Input interrupted by SIGINT. Using default N = 10.\n");
+                return 10;
+            } else {
+                perror("Input error");
+                continue;
+            }
+        }
+        if (sscanf(input, "%d", &N) == 1 && N > 0) return N;
+        printf("Invalid input. Please enter a positive integer.\n");
+    }
+}
+
+void start_threads(pthread_t *t1, pthread_t *t2, pthread_t *t3, int *N) {
+    pthread_create(t1, NULL, prime_sum_thread, N);
+    pthread_create(t2, NULL, print_thread1, NULL);
+    pthread_create(t3, NULL, print_thread2, NULL);
+}
+
+void join_threads(pthread_t t1, pthread_t t2, pthread_t t3, int N) {
+    int* result;
+    pthread_join(t1, (void**)&result);
+    if (!stop) {
+        printf("[Main] Sum of first %d primes: %d\n", N, *result);
+    } else {
+        printf("[Main] Thread A interrupted. Partial sum: %d\n", *result);
+    }
+    free(result);
+
+    pthread_join(t2, NULL);
+    pthread_join(t3, NULL);
+}
+
+int main() {
+    pthread_t thread_a, thread_b, thread_c;
+
+    setup_sigint_handler();
+
+    int N = get_input();
+
+    printf("[Main] Starting threads...\n");
+
+    start_threads(&thread_a, &thread_b, &thread_c, &N);
+    join_threads(thread_a, thread_b, thread_c, N);
+
+    printf("[Main] All threads finished. Exiting.\n");
+    return 0;
+}
+
+
+
+RESULT:
+vishal@LAPTOP-2GPNTJBE:~/dev$ gcc -pthread -o thread2 thread2.c
+vishal@LAPTOP-2GPNTJBE:~/dev$ ./thread2
+Enter the value of N for prime sum: 5
+[Main] Starting threads...
+[Thread A] Start: Tue May 27 14:45:20 2025
+[Thread A] End: Tue May 27 14:45:20 2025
+[Thread A] Duration: 0.00 seconds
+[Main] Sum of first 5 primes: 28
+[Thread B] Start: Tue May 27 14:45:20 2025
+[Thread B] Thread 1 running
+[Thread C] Start: Tue May 27 14:45:20 2025
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] Thread 1 running
+[Thread B] Thread 1 running
+[Thread C] Thread 2 running
+[Thread B] End: Tue May 27 14:47:06 2025
+[Thread B] Duration: 106.00 seconds
+[Thread C] End: Tue May 27 14:47:08 2025
+[Thread C] Duration: 108.00 seconds
+[Main] All threads finished. Exiting.
+
+3. EXPLAIN THE TERMS
+
+fork():
+The fork() function is a system call used to create a new process, which becomes the child process of the calling process (the parent process). It duplicates the parent process, creating an almost exact copy, including code, data, and open files. The child process gets a new, unique process ID (PID). Both parent and child processes continue execution from the instruction immediately following the fork() call. 
+
+handling signals:
+In C, signals are software interrupts delivered to a process to notify it of an event. Handling signals allows programs to respond gracefully to events like user interrupts or errors. The <signal.h> header provides the necessary tools for signal handling.
+Common Signals
+SIGINT: Sent when the user presses Ctrl+C, typically used to interrupt a program.
+SIGTERM: A generic signal used to request termination of a program.
+SIGABRT: Sent when the abort() function is called, indicating an abnormal termination.
+SIGFPE: Sent when an erroneous arithmetic operation occurs, like division by zero.
+SIGSEGV: Sent when a program attempts to access memory it is not allowed to.
+SIGILL: Sent when a program attempts to execute an invalid instruction.
+SIGCHLD: Sent to a parent process when a child process terminates.
+SIGHUP: Sent when a controlling terminal is closed or disconnected.
+
+different kernel crashes:
+Kernel crashes in C often happen due to null pointer dereferences, where the code tries to access memory through a null pointer, causing an immediate fault. Similarly, segmentation faults occur when the program accesses invalid or unauthorized memory regions, usually from bad pointers or buffer overruns.
+
+Another common cause is stack overflow, which happens due to deep or infinite recursion exhausting the stack space. Illegal instructions arise when the CPU encounters corrupted or unsupported instructions, often caused by memory corruption or improper casting.
+
+Divide by zero errors occur during integer division by zero, leading to exceptions or crashes. Accessing unmapped memory or violating memory permissions causes page faults, a frequent source of kernel crashes.
+
+Time Complexity:
+Time complexity measures how the execution time of an algorithm scales as the input size grows. It describes the relationship between the number of operations performed by an algorithm and the size of its input, essentially quantifying the algorithm's efficiency. 
+
+mutex/spinlock
+
+mutex:A mutex is a mechanism that locks critical sections of code and only allows one thread to acquire the lock and use the resources at a time.
+spinlock: A spinlock is a synchronization primitive that uses busy-waiting. When a thread attempts to acquire a spinlock that another thread already holds, it continuously checks the lock in a loop (spins) until the lock becomes available. Unlike mutexes, spinlocks don’t put the thread to sleep, avoiding context switches.
+
+
